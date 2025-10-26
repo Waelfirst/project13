@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_material_requirement_wizard_user,access.material.requirement.wizard.user,model_material_requirement_wizard,base.group_user,1,1,1,1
+access_import_components_wizard_user,access.import.components.wizard.user,model_import_components_wizard,base.group_user,1,1,1,1
+access_import_components_only_wizard_user,access.import.components.only.wizard.user,model_import_components_only_wizard,base.group_user,1,1,1,1
+access_import_bom_materials_wizard_user,access.import.bom.materials.wizard.user,model_import_bom_materials_wizard,base.group_user,1,1,1,1
+access_import_bom_operations_wizard_user,access.import.bom.operations.wizard.user,model_import_bom_operations_wizard,base.group_user,1,1,1,1
+access_export_components_wizard_user,access.export.components.wizard.user,model_export_components_wizard,base.group_user,1,1,1,1
+access_work_order_creation_wizard_user,access.work.order.creation.wizard.user,model_work_order_creation_wizard,base.group_user,1,1,1,1
+access_component_specification_wizard_user,access.component.specification.wizard.user,model_component_specification_wizard,base.group_user,1,1,1,1
+access_component_specification_wizard_line_user,access.component.specification.wizard.line.user,model_component_specification_wizard_line,base.group_user,1,1,1,1
+access_operation_resource_wizard_user,access.operation.resource.wizard.user,model_operation_resource_wizard,base.group_user,1,1,1,1
+access_operations_excel_wizard_user,access.operations.excel.wizard.user,model_operations_excel_wizard,base.group_user,1,1,1,1

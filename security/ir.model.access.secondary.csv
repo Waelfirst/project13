@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_production_progress_report_user,access.production.progress.report.user,model_production_progress_report,base.group_user,1,0,0,0
+access_material_usage_report_user,access.material.usage.report.user,model_material_usage_report,base.group_user,1,0,0,0
+access_excel_import_manager_user,access.excel.import.manager.user,model_excel_import_manager,base.group_user,1,1,1,1

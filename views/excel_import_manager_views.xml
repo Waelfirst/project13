@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_excel_import_manager_tree" model="ir.ui.view">
+        <field name="name">excel.import.manager.tree</field>
+        <field name="model">excel.import.manager</field>
+        <field name="arch" type="xml">
+            <tree string="Excel Import Manager">
+                <field name="name"/>
+                <field name="pricing_id"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <field name="product_id"/>
+                <field name="step1_components_count"/>
+                <field name="step2_boms_created"/>
+                <field name="step3_routings_created"/>
+                <field name="state" widget="badge"
+                       decoration-success="state=='completed'"
+                       decoration-info="state in ('step1_done','step2_done','step3_done')"
+                       decoration-muted="state=='draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_excel_import_manager_form" model="ir.ui.view">
+        <field name="name">excel.import.manager.form</field>
+        <field name="model">excel.import.manager</field>
+        <field name="arch" type="xml">
+            <form string="Excel Import Manager">
+                <header>
+                    <button name="action_reset" string="Reset" type="object"
+                            class="btn-warning" confirm="Are you sure you want to reset? This will clear all import statistics."
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,step1_done,step2_done,step3_done,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="pricing_id" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="product_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- STEP 1: Components -->
+                        <page string="📦 Step 1: Components">
+                            <group>
+                                <group string="Upload File">
+                                    <button name="action_download_step1_template"
+                                            string="📄 Download Template"
+                                            type="object" class="btn-success"
+                                            icon="fa-download"/>
+                                    <field name="step1_file" filename="step1_filename"
+                                           widget="binary"/>
+                                    <field name="step1_filename" invisible="1"/>
+                                </group>
+                                <group string="Statistics" invisible="state == 'draft'">
+                                    <field name="step1_date" readonly="1"/>
+                                    <field name="step1_components_count" readonly="1"/>
+                                    <field name="step1_products_created" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <button name="action_import_step1"
+                                        string="📥 Import Step 1"
+                                        type="object" class="btn-primary"
+                                        icon="fa-upload"/>
+                            </group>
+                            <group string="Instructions">
+                                <p>
+                                    📋 <b>Step 1: Import Components</b><br/>
+                                    1. Download the template<br/>
+                                    2. Fill in component names, quantities, weights, and costs<br/>
+                                    3. Upload the file<br/>
+                                    4. Click "Import Step 1"<br/>
+                                    <br/>
+                                    ✨ <b>Products will be auto-created if not found</b>
+                                </p>
+                            </group>
+                        </page>
+
+                        <!-- STEP 2: Materials -->
+                        <page string="📦 Step 2: Materials">
+                            <group>
+                                <group string="Upload File">
+                                    <button name="action_download_step2_template"
+                                            string="📄 Download Template"
+                                            type="object" class="btn-success"
+                                            icon="fa-download"
+                                            invisible="state == 'draft'"/>
+                                    <field name="step2_file" filename="step2_filename"
+                                           widget="binary"
+                                           invisible="state == 'draft'"/>
+                                    <field name="step2_filename" invisible="1"/>
+                                </group>
+                                <group string="Statistics" invisible="state in ('draft', 'step1_done')">
+                                    <field name="step2_date" readonly="1"/>
+                                    <field name="step2_boms_created" readonly="1"/>
+                                    <field name="step2_materials_created" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <button name="action_import_step2"
+                                        string="📥 Import Step 2"
+                                        type="object" class="btn-primary"
+                                        icon="fa-upload"
+                                        invisible="state == 'draft'"/>
+                            </group>
+                            <group string="Instructions">
+                                <p>
+                                    📋 <b>Step 2: Import BOM Materials</b><br/>
+                                    1. Complete Step 1 first<br/>
+                                    2. Download the template<br/>
+                                    3. Fill in component names and their materials<br/>
+                                    4. Upload the file<br/>
+                                    5. Click "Import Step 2"<br/>
+                                    <br/>
+                                    ✨ <b>Materials and BOMs will be auto-created</b>
+                                </p>
+                            </group>
+                        </page>
+
+                        <!-- STEP 3: Operations -->
+                        <page string="⚙️ Step 3: Operations">
+                            <group>
+                                <group string="Upload File">
+                                    <button name="action_download_step3_template"
+                                            string="📄 Download Template"
+                                            type="object" class="btn-success"
+                                            icon="fa-download"
+                                            invisible="state in ('draft', 'step1_done')"/>
+                                    <field name="step3_file" filename="step3_filename"
+                                           widget="binary"
+                                           invisible="state in ('draft', 'step1_done')"/>
+                                    <field name="step3_filename" invisible="1"/>
+                                </group>
+                                <group string="Statistics" invisible="state in ('draft', 'step1_done', 'step2_done')">
+                                    <field name="step3_date" readonly="1"/>
+                                    <field name="step3_routings_created" readonly="1"/>
+                                    <field name="step3_workcenters_created" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <button name="action_import_step3"
+                                        string="📥 Import Step 3"
+                                        type="object" class="btn-primary"
+                                        icon="fa-upload"
+                                        invisible="state in ('draft', 'step1_done')"/>
+                            </group>
+                            <group string="Instructions">
+                                <p>
+                                    📋 <b>Step 3: Import BOM Operations</b><br/>
+                                    1. Complete Step 1 and Step 2 first<br/>
+                                    2. Download the template<br/>
+                                    3. Fill in operations for each component<br/>
+                                    4. Upload the file<br/>
+                                    5. Click "Import Step 3"<br/>
+                                    <br/>
+                                    ✨ <b>Workcenters and routings will be auto-created</b><br/>
+                                    🎉 <b>Process complete after this step!</b>
+                                </p>
+                            </group>
+                        </page>
+
+                        <!-- Notes -->
+                        <page string="Notes">
+                            <field name="notes" placeholder="Add any notes here..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_excel_import_manager_search" model="ir.ui.view">
+        <field name="name">excel.import.manager.search</field>
+        <field name="model">excel.import.manager</field>
+        <field name="arch" type="xml">
+            <search string="Search Excel Import">
+                <field name="name"/>
+                <field name="pricing_id"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state','in',['step1_done','step2_done','step3_done'])]"/>
+                <filter string="Completed" name="completed" domain="[('state','=','completed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Pricing" name="group_pricing" context="{'group_by':'pricing_id'}"/>
+                    <filter string="Customer" name="group_customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_excel_import_manager" model="ir.actions.act_window">
+        <field name="name">Excel Import Manager</field>
+        <field name="res_model">excel.import.manager</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Start Excel Import Process
+            </p>
+            <p>
+                Import components, BOMs, and operations in 3 easy steps!
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_excel_import_manager"
+              name="Excel Import Manager"
+              parent="project_product_costing.menu_project_product_costing_root"
+              action="action_excel_import_manager"
+              sequence="25"/>
+</odoo>

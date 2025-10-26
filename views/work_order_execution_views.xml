@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Work Order Operation Line Tree View - UPDATED with Additional Code and Specifications -->
+    <record id="view_work_order_operation_line_tree" model="ir.ui.view">
+        <field name="name">work.order.operation.line.tree</field>
+        <field name="model">work.order.operation.line</field>
+        <field name="arch" type="xml">
+            <tree string="Work Order Operations"
+                  decoration-success="state=='done'"
+                  decoration-info="state=='progress'"
+                  decoration-warning="state in ('ready','waiting')"
+                  decoration-muted="state=='cancel'"
+                  create="false" delete="false">
+                <field name="sequence" widget="handle"/>
+                <field name="selected" widget="boolean_toggle"/>
+                <field name="project_id" optional="show"/>
+                <field name="product_id" optional="show"/>
+                <field name="production_id"/>
+                <field name="component_id"/>
+                <field name="additional_code" optional="show" widget="text"/>
+                <field name="specification_text" optional="show" widget="text"/>
+                <field name="name"/>
+                <field name="workcenter_id"/>
+                <field name="state" widget="badge"/>
+                <field name="qty_production" optional="hide"/>
+                <field name="qty_produced" optional="hide"/>
+                <field name="progress_percentage" widget="progressbar"/>
+                <field name="duration_expected"/>
+                <field name="actual_duration" optional="show"/>
+                <field name="workers_assigned" optional="show"/>
+                <field name="machines_assigned" optional="show"/>
+                <field name="date_start" optional="hide"/>
+                <button name="action_start" type="object"
+                        icon="fa-play" string="Start"/>
+                <button name="action_finish" type="object"
+                        icon="fa-check" string="Finish"/>
+                <button name="action_open_workorder" type="object"
+                        icon="fa-external-link" string="Open"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Work Order Operation Line Form View - UPDATED -->
+    <record id="view_work_order_operation_line_form" model="ir.ui.view">
+        <field name="name">work.order.operation.line.form</field>
+        <field name="model">work.order.operation.line</field>
+        <field name="arch" type="xml">
+            <form string="Work Order Operation">
+                <header>
+                    <button name="action_start" string="Start" type="object"
+                            class="btn-primary" invisible="state not in ('pending','ready','waiting')"/>
+                    <button name="action_finish" string="Finish" type="object"
+                            class="btn-success" invisible="state not in ('progress','to_close')"/>
+                    <button name="action_open_workorder" string="Open Workorder" type="object"
+                            class="btn-secondary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="product_id"/>
+                            <field name="production_id"/>
+                            <field name="component_id"/>
+                            <field name="name"/>
+                            <field name="workcenter_id"/>
+                        </group>
+                        <group>
+                            <field name="qty_production"/>
+                            <field name="qty_produced"/>
+                            <field name="progress_percentage" widget="progressbar"/>
+                            <field name="duration_expected"/>
+                            <field name="duration_real"/>
+                            <field name="date_start"/>
+                            <field name="date_finished"/>
+                        </group>
+                    </group>
+
+                    <group string="Actual Execution Data">
+                        <group>
+                            <field name="actual_duration"/>
+                            <field name="workers_assigned"/>
+                        </group>
+                        <group>
+                            <field name="machines_assigned"/>
+                        </group>
+                    </group>
+
+                    <group string="Component Specifications">
+                        <field name="additional_code" widget="text" nolabel="1"/>
+                        <field name="specification_ids" nolabel="1">
+                            <tree>
+                                <field name="specification_name"/>
+                                <field name="value"/>
+                                <field name="notes"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Work Order Operation Line Search View - UPDATED with more filters -->
+    <record id="view_work_order_operation_line_search" model="ir.ui.view">
+        <field name="name">work.order.operation.line.search</field>
+        <field name="model">work.order.operation.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Operations">
+                <field name="production_id"/>
+                <field name="component_id"/>
+                <field name="name"/>
+                <field name="workcenter_id"/>
+                <field name="project_id"/>
+                <field name="product_id"/>
+                <field name="additional_code"/>
+                <field name="specification_text"/>
+
+                <filter name="filter_not_completed" string="Not Completed"
+                        domain="[('is_completed', '=', False)]"/>
+                <filter name="filter_in_progress" string="In Progress"
+                        domain="[('state', '=', 'progress')]"/>
+                <filter name="filter_ready" string="Ready"
+                        domain="[('state', 'in', ('ready', 'waiting'))]"/>
+                <filter name="filter_completed" string="Completed"
+                        domain="[('state', '=', 'done')]"/>
+                <filter name="filter_with_actual_data" string="Has Actual Data"
+                        domain="[('actual_duration', '>', 0)]"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_by_project" string="Project"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter name="group_by_product" string="Product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter name="group_production" string="Production Order"
+                            context="{'group_by': 'production_id'}"/>
+                    <filter name="group_component" string="Component"
+                            context="{'group_by': 'component_id'}"/>
+                    <filter name="group_operation" string="Operation Name"
+                            context="{'group_by': 'name'}"/>
+                    <filter name="group_workcenter" string="Work Center"
+                            context="{'group_by': 'workcenter_id'}"/>
+                    <filter name="group_state" string="State"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Work Order Execution Form - UPDATED with new buttons -->
+    <record id="view_work_order_execution_form" model="ir.ui.view">
+        <field name="name">work.order.execution.form</field>
+        <field name="model">work.order.execution</field>
+        <field name="arch" type="xml">
+            <form string="Work Order Execution">
+                <header>
+                    <button name="action_load_work_orders" string="Load Work Orders" type="object"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_start_selected" string="Start Selected" type="object"
+                            class="oe_highlight" invisible="state not in ('loaded','in_progress')"/>
+                    <button name="action_open_operations_view" string="View Operations"
+                            type="object" class="btn-info" invisible="state == 'draft'"/>
+
+                    <!-- NEW: Excel Import/Export Buttons -->
+                    <button name="%(action_operations_excel_export_wizard)d"
+                            string="Export to Excel"
+                            type="action" class="btn-success"
+                            invisible="state == 'draft'"
+                            context="{'default_execution_id': id, 'default_mode': 'export'}"/>
+                    <button name="%(action_operations_excel_import_wizard)d"
+                            string="Import from Excel"
+                            type="action" class="btn-warning"
+                            invisible="state == 'draft'"
+                            context="{'default_execution_id': id, 'default_mode': 'import'}"/>
+
+                    <button name="action_open_production_report" string="View Progress Report"
+                            type="object" class="btn-secondary" invisible="state == 'draft'"/>
+                    <button name="action_done" string="Mark as Done" type="object"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('done','cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,loaded,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="product_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="total_components"/>
+                            <field name="in_progress_components"/>
+                            <field name="completed_components"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Work Order Lines" invisible="state == 'draft'">
+                            <field name="work_order_line_ids">
+                                <tree editable="bottom" decoration-success="production_state=='done'"
+                                      decoration-info="production_state in ('confirmed','progress')">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="selected" widget="boolean_toggle"/>
+                                    <field name="component_id"/>
+                                    <field name="quantity"/>
+                                    <field name="weight"/>
+                                    <field name="additional_code" widget="text" optional="show"/>
+                                    <field name="production_id" readonly="1"/>
+                                    <field name="production_state" readonly="1"/>
+                                    <field name="current_operation" readonly="1"/>
+                                    <field name="progress_percentage" widget="progressbar" readonly="1"/>
+                                    <button name="action_start_production" type="object"
+                                            icon="fa-play" string="Start"
+                                            invisible="production_state not in ('draft','confirmed')"/>
+                                    <button name="action_next_operation" type="object"
+                                            icon="fa-forward" string="Next Operation"
+                                            invisible="production_state != 'progress'"/>
+                                    <button name="action_view_production" type="object"
+                                            icon="fa-external-link" string="View"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Add notes here..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Operation Resource Wizard View -->
+    <record id="view_operation_resource_wizard_form" model="ir.ui.view">
+        <field name="name">operation.resource.wizard.form</field>
+        <field name="model">operation.resource.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Assign Resources">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <h4>📋 Assign Resources to Operations</h4>
+                        <p>Assign workers and machines to <strong><field name="operations_count"/> operations</strong> of type: <strong><field name="operation_name"/></strong></p>
+                    </div>
+
+                    <group>
+                        <field name="operation_ids" invisible="1"/>
+                    </group>
+
+                    <group string="Resource Assignment">
+                        <group>
+                            <field name="workers_assigned"
+                                   decoration-bf="1"/>
+                            <field name="machines_assigned"
+                                   decoration-bf="1"/>
+                        </group>
+                        <group>
+                            <field name="actual_duration"
+                                   placeholder="Optional: Actual time taken"/>
+                        </group>
+                    </group>
+
+                    <group string="Notes">
+                        <field name="notes" placeholder="Add any additional notes..." nolabel="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Assign Resources" name="action_assign_resources"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Operations Excel Wizard View -->
+    <record id="view_operations_excel_wizard_form" model="ir.ui.view">
+        <field name="name">operations.excel.wizard.form</field>
+        <field name="model">operations.excel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Operations Excel Import/Export">
+                <sheet>
+                    <group>
+                        <field name="execution_id" invisible="1"/>
+                        <field name="mode" widget="radio"/>
+                    </group>
+
+                    <!-- Export Mode -->
+                    <group invisible="mode != 'export'" string="Export Options">
+                        <field name="include_specifications"/>
+                    </group>
+
+                    <!-- Import Mode -->
+                    <group invisible="mode != 'import'">
+                        <field name="excel_file" filename="filename" widget="binary"/>
+                        <field name="filename" invisible="1"/>
+                    </group>
+
+                    <group string="Instructions">
+                        <field name="notes" nolabel="1" readonly="1" widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="📤 Export" name="action_export"
+                            type="object" class="btn-primary"
+                            invisible="mode != 'export'"/>
+                    <button string="📥 Import" name="action_import"
+                            type="object" class="btn-primary"
+                            invisible="mode != 'import'"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_work_order_operation_line" model="ir.actions.act_window">
+        <field name="name">Work Order Operations</field>
+        <field name="res_model">work.order.operation.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'search_default_filter_not_completed': 1,
+            'search_default_group_by_project': 1
+        }</field>
+    </record>
+
+    <record id="action_operation_resource_wizard" model="ir.actions.act_window">
+        <field name="name">Assign Resources</field>
+        <field name="res_model">operation.resource.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_work_order_operation_line"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <record id="action_operations_excel_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Operations to Excel</field>
+        <field name="res_model">operations.excel.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_operations_excel_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Operations from Excel</field>
+        <field name="res_model">operations.excel.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

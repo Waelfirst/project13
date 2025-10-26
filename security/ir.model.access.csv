@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_definition_user,access.project.definition.user,model_project_definition,base.group_user,1,1,1,1
+access_project_product_line_user,access.project.product.line.user,model_project_product_line,base.group_user,1,1,1,1
+access_project_product_pricing_user,access.project.product.pricing.user,model_project_product_pricing,base.group_user,1,1,1,1
+access_project_product_component_user,access.project.product.component.user,model_project_product_component,base.group_user,1,1,1,1
+access_material_production_planning_user,access.material.production.planning.user,model_material_production_planning,base.group_user,1,1,1,1
+access_material_planning_component_user,access.material.planning.component.user,model_material_planning_component,base.group_user,1,1,1,1
+access_material_requirement_line_user,access.material.requirement.line.user,model_material_requirement_line,base.group_user,1,1,1,1
+access_work_order_execution_user,access.work.order.execution.user,model_work_order_execution,base.group_user,1,1,1,1
+access_work_order_execution_line_user,access.work.order.execution.line.user,model_work_order_execution_line,base.group_user,1,1,1,1
+access_work_order_operation_line_user,access.work.order.operation.line.user,model_work_order_operation_line,base.group_user,1,1,1,1
+access_component_specification_definition_user,access.component.specification.definition.user,model_component_specification_definition,base.group_user,1,1,1,1
+access_component_specification_value_user,access.component.specification.value.user,model_component_specification_value,base.group_user,1,1,1,1

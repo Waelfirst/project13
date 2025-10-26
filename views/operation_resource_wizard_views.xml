@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Operation Resource Wizard Form View -->
+    <record id="view_operation_resource_wizard_form" model="ir.ui.view">
+        <field name="name">operation.resource.wizard.form</field>
+        <field name="model">operation.resource.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Assign Resources to Operations">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <h4><i class="fa fa-users"/> Assign Resources to Multiple Operations</h4>
+                        <p>You are assigning resources to <strong><field name="operations_count" readonly="1"/> operations</strong> of type:</p>
+                        <h5 class="text-primary"><field name="operation_name" readonly="1"/></h5>
+                    </div>
+
+                    <group>
+                        <field name="operation_ids" invisible="1"/>
+                    </group>
+
+                    <group string="Resource Assignment" class="mt-3">
+                        <group>
+                            <label for="workers_assigned" class="oe_edit_only"/>
+                            <div>
+                                <field name="workers_assigned"
+                                       class="oe_inline"
+                                       style="width: 100px"/>
+                                <span class="ml-2 text-muted">workers per operation</span>
+                            </div>
+
+                            <label for="machines_assigned" class="oe_edit_only"/>
+                            <div>
+                                <field name="machines_assigned"
+                                       class="oe_inline"
+                                       style="width: 100px"/>
+                                <span class="ml-2 text-muted">machines per operation</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="actual_duration" class="oe_edit_only"/>
+                            <div>
+                                <field name="actual_duration"
+                                       class="oe_inline"
+                                       style="width: 100px"
+                                       placeholder="0"/>
+                                <span class="ml-2 text-muted">minutes (optional)</span>
+                            </div>
+                        </group>
+                    </group>
+
+                    <group string="Additional Notes (Optional)" class="mt-3">
+                        <field name="notes"
+                               placeholder="Add any additional notes or comments..."
+                               nolabel="1"/>
+                    </group>
+
+                    <div class="alert alert-success mt-3" role="alert">
+                        <i class="fa fa-check-circle"/> These values will be applied to all selected operations
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="✓ Assign Resources"
+                            name="action_assign_resources"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for wizard (called from operations list) -->
+    <record id="action_operation_resource_wizard" model="ir.actions.act_window">
+        <field name="name">Assign Resources</field>
+        <field name="res_model">operation.resource.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_work_order_operation_line"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

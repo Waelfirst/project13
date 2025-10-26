@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Import Components Only Wizard -->
+    <record id="view_import_components_only_wizard_form" model="ir.ui.view">
+        <field name="name">import.components.only.wizard.form</field>
+        <field name="model">import.components.only.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Components - Step 1">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <h4>📦 STEP 1: Import Components (المرحلة الأولى: استيراد الأجزاء)</h4>
+                        <p>Upload Excel file containing components/parts data</p>
+                    </div>
+                    <group>
+                        <field name="pricing_id" invisible="1"/>
+                        <field name="excel_file" filename="filename" widget="binary"/>
+                        <field name="filename" invisible="1"/>
+                    </group>
+                    <group string="Instructions / التعليمات">
+                        <field name="notes" nolabel="1" readonly="1" widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="📥 Import" name="action_import"
+                            type="object" class="btn-primary"/>
+                    <button string="📄 Download Template" name="action_download_template"
+                            type="object" class="btn-success"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Import BOM Materials Wizard -->
+    <record id="view_import_bom_materials_wizard_form" model="ir.ui.view">
+        <field name="name">import.bom.materials.wizard.form</field>
+        <field name="model">import.bom.materials.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import BOM Materials - Step 2">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <h4>📦 STEP 2: Import BOM Materials (المرحلة الثانية: استيراد مواد قوائم المكونات)</h4>
+                        <p>Upload Excel file with raw materials for BOMs</p>
+                    </div>
+                    <group>
+                        <field name="pricing_id" invisible="1"/>
+                        <field name="excel_file" filename="filename" widget="binary"/>
+                        <field name="filename" invisible="1"/>
+                    </group>
+                    <group string="Instructions / التعليمات">
+                        <field name="notes" nolabel="1" readonly="1" widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="📥 Import" name="action_import"
+                            type="object" class="btn-primary"/>
+                    <button string="📄 Download Template" name="action_download_template"
+                            type="object" class="btn-success"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Import BOM Operations Wizard -->
+    <record id="view_import_bom_operations_wizard_form" model="ir.ui.view">
+        <field name="name">import.bom.operations.wizard.form</field>
+        <field name="model">import.bom.operations.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import BOM Operations - Step 3">
+                <sheet>
+                    <div class="alert alert-success" role="alert">
+                        <h4>⚙️ STEP 3: Import BOM Operations (المرحلة الثالثة: استيراد عمليات قوائم المكونات)</h4>
+                        <p>Upload Excel file with manufacturing operations</p>
+                    </div>
+                    <group>
+                        <field name="pricing_id" invisible="1"/>
+                        <field name="excel_file" filename="filename" widget="binary"/>
+                        <field name="filename" invisible="1"/>
+                    </group>
+                    <group string="Instructions / التعليمات">
+                        <field name="notes" nolabel="1" readonly="1" widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="📥 Import" name="action_import"
+                            type="object" class="btn-primary"/>
+                    <button string="📄 Download Template" name="action_download_template"
+                            type="object" class="btn-success"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
