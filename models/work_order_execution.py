@@ -641,11 +641,11 @@ class WorkOrderOperationLine(models.Model):
         ondelete='cascade'
     )
 
-    # CHANGED: Use computed fields instead of related fields
+    # FIXED: Use related fields instead of compute - this ensures proper field existence
     execution_id = fields.Many2one(
         'work.order.execution',
         string='Execution',
-        compute='_compute_execution_relations',
+        related='execution_line_id.execution_id',
         store=True,
         readonly=True,
         index=True
@@ -654,7 +654,7 @@ class WorkOrderOperationLine(models.Model):
     project_id = fields.Many2one(
         'project.definition',
         string='Project',
-        compute='_compute_execution_relations',
+        related='execution_line_id.execution_id.project_id',
         store=True,
         readonly=True,
         index=True
@@ -663,7 +663,7 @@ class WorkOrderOperationLine(models.Model):
     product_id = fields.Many2one(
         'product.product',
         string='Product',
-        compute='_compute_execution_relations',
+        related='execution_line_id.execution_id.product_id',
         store=True,
         readonly=True,
         index=True
@@ -672,7 +672,7 @@ class WorkOrderOperationLine(models.Model):
     component_id = fields.Many2one(
         'product.product',
         string='Component',
-        compute='_compute_execution_relations',
+        related='execution_line_id.component_id',
         store=True,
         readonly=True
     )
@@ -680,37 +680,11 @@ class WorkOrderOperationLine(models.Model):
     production_id = fields.Many2one(
         'mrp.production',
         string='Production Order',
-        compute='_compute_execution_relations',
+        related='execution_line_id.production_id',
         store=True,
         readonly=True,
         index=True
     )
-
-    @api.depends('execution_line_id', 'execution_line_id.execution_id',
-                 'execution_line_id.execution_id.project_id',
-                 'execution_line_id.execution_id.product_id',
-                 'execution_line_id.component_id',
-                 'execution_line_id.production_id')
-    def _compute_execution_relations(self):
-        """Compute all related fields from execution_line_id"""
-        for record in self:
-            if record.execution_line_id:
-                record.execution_id = record.execution_line_id.execution_id
-                record.component_id = record.execution_line_id.component_id
-                record.production_id = record.execution_line_id.production_id
-
-                if record.execution_line_id.execution_id:
-                    record.project_id = record.execution_line_id.execution_id.project_id
-                    record.product_id = record.execution_line_id.execution_id.product_id
-                else:
-                    record.project_id = False
-                    record.product_id = False
-            else:
-                record.execution_id = False
-                record.project_id = False
-                record.product_id = False
-                record.component_id = False
-                record.production_id = False
 
     workorder_id = fields.Many2one(
         'mrp.workorder',
